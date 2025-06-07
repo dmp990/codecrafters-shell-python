@@ -1,15 +1,15 @@
 import sys
 
 def REPL():
-    sys.stdout.write("$ ")
+    while True:
+        sys.stdout.write("$ ")
 
-    # Wait for user input
-    command = input()
-    print(f"{command}: command not found")
+        # Wait for user input
+        command = input()
+        print(f"{command}: command not found")
 
 def main():
-    while True:
-        REPL()
+    REPL()
 
 
 if __name__ == "__main__":
