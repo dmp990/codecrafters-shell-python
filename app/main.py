@@ -50,11 +50,19 @@ def REPL():
                     delimiter = ":"
 
                 for p in path.split(delimiter):
-                    if to_check in os.listdir(p):
-                        print(f"{to_check} is {p}/{to_check}")
+                    try:
+                        entries = os.listdir(p)
+                    except FileNotFoundError:
                         continue
+                    if to_check in entries:
+                        print(f"{to_check} is {p}/{to_check}")
+                        executable = True
+                        break
+                else:
+                    executable = False
                 
-                print(f"{to_check}: not found")
+                if not executable and not builtin:
+                    print(f"{to_check}: not found")
 
 
 def main():
