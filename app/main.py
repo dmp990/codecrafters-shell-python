@@ -28,6 +28,17 @@ def REPL():
                     print(" ".join(parts[1:]))
                 except IndexError:
                     print()
+            case "type":
+                try:
+                    to_check = parts[1]
+                    known = to_check in COMMANDS
+                except IndexError:
+                    known = False
+
+                if known:
+                    print(f"{to_check} is a shell builtin")
+                else:
+                    print(f"{to_check}: not found")
 
 
 def main():
