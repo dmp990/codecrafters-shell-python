@@ -1,6 +1,7 @@
 import os
 import platform
 import sys
+import subprocess
 
 from app.commands import COMMANDS
 
@@ -14,9 +15,11 @@ def REPL():
 
         parts = command.strip().split(" ")
 
-        if parts[0] not in COMMANDS:
-            print(f"{command}: command not found")
-            continue
+        path = os.getenv("PATH")
+        if platform.system() == "Windows":
+            delimiter = ";"
+        else:
+            delimiter = ":"
 
         match parts[0]:
             case "exit":
@@ -30,6 +33,7 @@ def REPL():
                     print(" ".join(parts[1:]))
                 except IndexError:
                     print()
+                continue
             case "type":
                 try:
                     to_check = parts[1]
@@ -41,14 +45,8 @@ def REPL():
                 if builtin:
                     print(f"{to_check} is a shell builtin")
                     continue
-                
-                # Search path
-                path = os.getenv("PATH")
-                if platform.system() == "Windows":
-                    delimiter = ";"
-                else:
-                    delimiter = ":"
 
+                # Search path
                 for p in path.split(delimiter):
                     try:
                         entries = os.listdir(p)
@@ -60,9 +58,31 @@ def REPL():
                         break
                 else:
                     executable = False
-                
+
                 if not executable and not builtin:
                     print(f"{to_check}: not found")
+
+                continue
+            case _:
+                for p in path.split(delimiter):
+                    try:
+                        entries = os.listdir(p)
+                    except FileNotFoundError:
+                        continue
+
+                    try:
+                        to_check = parts[0]
+                    except IndexError:
+                        break
+
+                    if to_check in entries:
+                        if len(parts) > 1:
+                            subprocess.run([os.path.join(p, to_check)] + parts[1:])
+                        else:
+                            subprocess.run([os.path.join(p, to_check)])
+                        break
+                else:
+                    print(f"{command}: command not found")
 
 
 def main():
