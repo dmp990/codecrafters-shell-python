@@ -1,7 +1,6 @@
 import os
 import platform
 import sys
-import subprocess
 
 from app.commands import COMMANDS
 
@@ -76,11 +75,10 @@ def REPL():
                         break
 
                     if to_check in entries:
-                        if len(parts) > 1:
-                            subprocess.run([os.path.join(p, to_check)] + parts[1:])
-                        else:
-                            subprocess.run([os.path.join(p, to_check)])
-                        break
+                        file_path = os.path.join(p, to_check)
+                        if os.path.isfile(file_path):
+                            os.system(command)
+                            break
                 else:
                     print(f"{command}: command not found")
 
