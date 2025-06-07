@@ -16,9 +16,9 @@ def REPL():
             continue
 
         if parts[0] == "exit":
-            if len(parts) > 1:
-                exit_code = parts[1]
-            else:
+            try:
+                exit_code = int(parts[1])
+            except (IndexError, ValueError):
                 exit_code = 0
             sys.exit(exit_code)
         
