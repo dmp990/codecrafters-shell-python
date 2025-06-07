@@ -1,6 +1,6 @@
 import sys
 
-from commands import COMMANDS
+from app.commands import COMMANDS
 
 def REPL():
     while True:
