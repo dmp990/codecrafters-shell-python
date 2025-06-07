@@ -1,2 +1,1 @@
-
-COMMANDS = {"exit"}
+COMMANDS = {"exit", "echo"}
