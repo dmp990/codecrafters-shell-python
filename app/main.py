@@ -1,3 +1,5 @@
+import os
+import platform
 import sys
 
 from app.commands import COMMANDS
@@ -31,14 +33,28 @@ def REPL():
             case "type":
                 try:
                     to_check = parts[1]
-                    known = to_check in COMMANDS
+                    builtin = to_check in COMMANDS
                 except IndexError:
-                    known = False
+                    print("not found")
+                    continue
 
-                if known:
+                if builtin:
                     print(f"{to_check} is a shell builtin")
+                    continue
+                
+                # Search path
+                path = os.getenv("PATH")
+                if platform.system() == "Windows":
+                    delimiter = ";"
                 else:
-                    print(f"{to_check}: not found")
+                    delimiter = ":"
+
+                for p in path.split(delimiter):
+                    if to_check in os.listdir(p):
+                        print(f"{to_check} is {p}/{to_check}")
+                        continue
+                
+                print(f"{to_check}: not found")
 
 
 def main():
